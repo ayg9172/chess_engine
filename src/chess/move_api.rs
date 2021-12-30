@@ -30,9 +30,7 @@ impl MoveAPI {
     pub fn get_legal_moves(&mut self) -> Vec<Move> {
         // TODO: make this run at most once per turn
         let mut out = Vec::new();
-        let pseudolegal: Vec<Move> = self
-            .move_generator
-            .get_moves(self.get_board_ref());
+        let pseudolegal: Vec<Move> = self.move_generator.get_moves(self.get_board_ref());
         let attack_color = self.get_board_ref().turn.get_opposite();
 
         for m in pseudolegal {
@@ -77,7 +75,6 @@ impl MoveAPI {
 
     pub fn perft(&mut self, depth: u64) -> (u64, Duration) {
         if depth == 1 {
-
             let now = Instant::now();
             let mut dur = Duration::new(0, 0);
 
@@ -88,9 +85,7 @@ impl MoveAPI {
             // with less effort
             let count = {
                 let mut out = Vec::new();
-                let pseudolegal: Vec<Move> = self
-                    .move_generator
-                    .get_moves(self.get_board_ref());
+                let pseudolegal: Vec<Move> = self.move_generator.get_moves(self.get_board_ref());
                 dur += now.elapsed();
                 let attack_color = self.get_board_ref().turn.get_opposite();
 
@@ -104,8 +99,8 @@ impl MoveAPI {
                     }
                 }
                 out
-            }.len() as u64;
-
+            }
+            .len() as u64;
 
             return (count, dur);
         }
@@ -113,9 +108,7 @@ impl MoveAPI {
         let now = Instant::now();
         let mut dur = Duration::new(0, 0);
 
-        let pseudolegal: Vec<Move> = self
-            .move_generator
-            .get_moves(self.get_board_ref());
+        let pseudolegal: Vec<Move> = self.move_generator.get_moves(self.get_board_ref());
         dur += now.elapsed();
 
         let attack_color = self.get_board_ref().turn.get_opposite();

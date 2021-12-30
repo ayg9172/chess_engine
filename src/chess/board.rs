@@ -43,6 +43,8 @@ pub enum Square {
 
 /// Represents castling sides in Chess
 /// Short is King-side, Long is Queen-side
+#[derive(Copy, Clone, PartialEq)]
+
 pub enum Castle {
     Short,
     Long,

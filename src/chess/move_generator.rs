@@ -9,8 +9,6 @@ use super::piece::Piece;
 use super::position::Position;
 use std::num::Wrapping;
 
-
-
 pub struct MoveGenerator {
     move_table: MoveTable,
 }
@@ -308,7 +306,7 @@ impl MoveGenerator {
         self.is_attacked(board, attacking_color, king_position.to_index())
     }
 
-    pub fn is_pinned_piece(&self, board: &Board, piece : Piece)->Option<Direction> {
+    pub fn is_pinned_piece(&self, board: &Board, piece: Piece) -> Option<Direction> {
         todo!();
     }
 

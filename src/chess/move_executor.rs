@@ -1,51 +1,41 @@
-use core::panic;
-use std::{rc::Rc};
+use crate::chess::direction::shift;
 
-use crate::chess::{direction::shift, };
-
-use super::{board::{Board, Square, Castle}, cmove::Move, piece::Piece, color::Color, bitboard_util::{mask, clear_bit}, direction::Direction, castle_utils::CastleUtility};
-
-const KING_ORIGIN : usize = Square::E8 as usize;
-const SHORT_KING_LANDING : usize = Square::G8 as usize;
-const LONG_KING_LANDING : usize = Square::C8 as usize;
-
-
-const LONG_ROOK_ORIGIN : usize = Square::A8 as usize;
-const SHORT_ROOK_ORIGIN : usize = Square::H8 as usize;
-const SHORT_ROOK_LANDING : usize = Square::F8 as usize;
-const LONG_ROOK_LANDING : usize = Square::D8 as usize;
-
-const UNIVERSE : u64 = u64::MAX;
-
+use super::{
+    bitboard_util::mask,
+    board::{Board, Castle},
+    castle_utils::CastleUtility,
+    cmove::Move,
+    color::Color,
+    direction::Direction,
+    piece::Piece,
+};
 
 pub struct MoveExecutor {
     /// reference to the board
-    board : Box<Board>,
-    previous_boards : Vec<Board>,
+    board: Box<Board>,
+    previous_boards: Vec<Board>,
 
-    castle_utility : CastleUtility,
-
-    
+    castle_utility: CastleUtility,
 }
+const CAPTURE_TYPES: [Piece; 5] = [
+    Piece::Pawn,
+    Piece::Knight,
+    Piece::Bishop,
+    Piece::Rook,
+    Piece::Queen,
+];
 
+impl MoveExecutor {
+    pub fn new(board: Board) -> MoveExecutor {
+        MoveExecutor {
+            board: Box::new(board),
+            previous_boards: Vec::new(),
 
-const BOARD_SIZE: u32 = 8;
-const CAPTURE_TYPES: [Piece; 5] = [Piece::Pawn, Piece::Knight, Piece::Bishop, Piece::Rook, Piece::Queen];
-
-impl MoveExecutor{
-
-    pub fn new(board : Board)-> MoveExecutor {
-        MoveExecutor { 
-            board : Box::new(board),
-            previous_boards : Vec::new(),
-            
-            castle_utility : CastleUtility::new(),
+            castle_utility: CastleUtility::new(),
         }
     }
 
-
-    pub fn exec_move(&mut self, mut cmove : Move) {
-
+    pub fn exec_move(&mut self, mut cmove: Move) {
         self.previous_boards.push(*self.board.clone());
 
         let color = self.board.turn;
@@ -54,9 +44,7 @@ impl MoveExecutor{
         let mut enemy_pieces = self.board.get_pieces(e_color);
         let mut piece_board = self.board.get_piece_board(cmove.piece);
 
-
         if cmove.piece == Piece::King {
-
             let is_legal_short = self.board.get_castle(Castle::Short, color);
             let is_legal_long = self.board.get_castle(Castle::Long, color);
 
@@ -64,7 +52,6 @@ impl MoveExecutor{
             let l = CastleUtility::get_king_landing(Castle::Long, color);
 
             // TODO: halve the code here :)
-
 
             if is_legal_short && cmove.end.to_index() == s {
                 let clear_mask = self.castle_utility.get_clear_castle(Castle::Short, color);
@@ -85,14 +72,10 @@ impl MoveExecutor{
                 rook_board |= rook_mask;
 
                 self.board.set_piece_board(Piece::Rook, rook_board);
-
             }
 
-
-
             // TODO: halve the code here :)
-            if is_legal_long  && cmove.end.to_index() == l {
-
+            if is_legal_long && cmove.end.to_index() == l {
                 let clear_mask = self.castle_utility.get_clear_castle(Castle::Long, color);
                 let mut rook_board = self.board.get_piece_board(Piece::Rook);
 
@@ -110,35 +93,30 @@ impl MoveExecutor{
                 rook_board |= rook_mask;
 
                 self.board.set_piece_board(Piece::Rook, rook_board);
-
             }
             self.board.set_castle(Castle::Short, color, false);
             self.board.set_castle(Castle::Long, color, false);
         }
 
-        
         if cmove.piece == Piece::Rook {
             // Check for rook loss of castle privileges
             if cmove.start.to_index() == CastleUtility::get_rook_origin(Castle::Short, color) {
-
                 self.board.set_castle(Castle::Short, color, false);
-                
-
-            } else if cmove.start.to_index() == CastleUtility::get_rook_origin(Castle::Long, color) {
+            } else if cmove.start.to_index() == CastleUtility::get_rook_origin(Castle::Long, color)
+            {
                 self.board.set_castle(Castle::Long, color, false);
-
             }
         }
 
         let capture_mask = mask(cmove.end.to_index()) & enemy_pieces;
         if capture_mask != 0 {
             for capture_type in CAPTURE_TYPES {
-                let is_capture = capture_mask & self.board.get_color_piece_board(capture_type, e_color) != 0;
+                let is_capture =
+                    capture_mask & self.board.get_color_piece_board(capture_type, e_color) != 0;
                 if is_capture {
                     // remove captured piece from piece type bitboard
                     let mut captured_piece_board = self.board.get_piece_board(capture_type);
-                    captured_piece_board  &= !mask(cmove.end.to_index());
-
+                    captured_piece_board &= !mask(cmove.end.to_index());
 
                     if capture_type == cmove.piece {
                         // TODO: clean this up
@@ -147,14 +125,18 @@ impl MoveExecutor{
                     }
 
                     // if rook is captured, other side obviously cant castle with it :)
-                    if cmove.end.to_index() == CastleUtility::get_rook_origin(Castle::Short, e_color) {
+                    if cmove.end.to_index()
+                        == CastleUtility::get_rook_origin(Castle::Short, e_color)
+                    {
                         self.board.set_castle(Castle::Short, e_color, false);
-
-                    } else if cmove.end.to_index() == CastleUtility::get_rook_origin(Castle::Long, e_color) {
+                    } else if cmove.end.to_index()
+                        == CastleUtility::get_rook_origin(Castle::Long, e_color)
+                    {
                         self.board.set_castle(Castle::Long, e_color, false);
                     }
 
-                    self.board.set_piece_board(capture_type, captured_piece_board);
+                    self.board
+                        .set_piece_board(capture_type, captured_piece_board);
                     // remove captured piece from enemy bitboard
                     enemy_pieces &= !mask(cmove.end.to_index());
                 }
@@ -163,16 +145,18 @@ impl MoveExecutor{
 
         let mut pep = 0; // TODO: clarify variable name
         if cmove.piece == Piece::Pawn {
-            // Adjust destination square if pawn captures by EP 
+            // Adjust destination square if pawn captures by EP
             let mut is_ep = self.board.ep_target & mask(cmove.end.to_index()) != 0;
 
             // ensure pawns are on same row
-            is_ep = is_ep && (self.board.ep_target.leading_zeros() as i32 - cmove.start.to_index() as i32).abs() == 1;
+            is_ep = is_ep
+                && (self.board.ep_target.leading_zeros() as i32 - cmove.start.to_index() as i32)
+                    .abs()
+                    == 1;
             if is_ep {
-                let vector = if color == Color::White { 
+                let vector = if color == Color::White {
                     shift(Direction::North)
-                }
-                else {
+                } else {
                     shift(Direction::South)
                 };
                 // adjust landing square, this step must be done after capture check
@@ -186,7 +170,7 @@ impl MoveExecutor{
                 piece_board &= !mask(cmove.start.to_index());
 
                 let mut new_type_board = self.board.get_piece_board(promotion_type);
-                new_type_board |= mask(cmove.end.to_index());   
+                new_type_board |= mask(cmove.end.to_index());
                 self.board.set_piece_board(promotion_type, new_type_board);
             }
 
@@ -205,7 +189,6 @@ impl MoveExecutor{
             piece_board |= mask(cmove.end.to_index());
         }
 
-
         friendly_pieces &= !mask(cmove.start.to_index());
         friendly_pieces |= mask(cmove.end.to_index());
 
@@ -217,11 +200,10 @@ impl MoveExecutor{
     }
 
     pub fn undo_move(&mut self) {
-
         self.board = Box::new(self.previous_boards.pop().unwrap());
     }
 
     pub fn get_board_ref(&self) -> &Board {
         return self.board.as_ref();
     }
-} 
+}
