@@ -1,4 +1,5 @@
 use super::bitboard_util::{clear_bit, mask};
+use super::direction::Direction;
 use super::move_table::MoveTable;
 
 use super::board::{Board, Castle, Square};
@@ -8,17 +9,7 @@ use super::piece::Piece;
 use super::position::Position;
 use std::num::Wrapping;
 
-/// Legal Move Gen Idea
-/// Prep: Check how many pieces check the King
-///       Get check Attack lines
-///       
-///
-/// 1. If more than 1 piece checks the King, generate King moves only [x]
-/// 2. Ensure check legality of post-King moves [x]
-/// 3. If King is checked, only legal moves are on the Attack Line, capturing checking piece, or by the King piece itself [x]
-/// 4. Get pinned pieces, mask away moves if they are made by a pinned piece
-///    in the direction of a not pinned move
-/// 5. Check for checks discovered by EP
+
 
 pub struct MoveGenerator {
     move_table: MoveTable,
@@ -315,6 +306,10 @@ impl MoveGenerator {
         // todo add error check
         let king_position = MoveGenerator::bitboard_to_positions(king_board)[0];
         self.is_attacked(board, attacking_color, king_position.to_index())
+    }
+
+    pub fn is_pinned_piece(&self, board: &Board, piece : Piece)->Option<Direction> {
+        todo!();
     }
 
     // TODO fix board borrow
