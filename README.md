@@ -9,7 +9,7 @@ https://www.chessprogramming.org/Perft
 
 Achievments so far:
 - Correct legal and pseudo-legal move generation
-- Chess Model Interaction Interface (usable for a website)
+- Chess Model Interaction Interface (easy integration with Front-end)
 
 My big goal is to write an AI
 once I write a good graphical interface for the ease of debugging.
