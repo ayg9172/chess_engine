@@ -9,7 +9,11 @@ https://www.chessprogramming.org/Perft
 
 Achievments so far:
 - Correct legal and pseudo-legal move generation
+- Conversion of FEN String to Board State and vice-versa 
+  (https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation)
+- Initial support for representing Positions in algebraic Chess notation
 - Chess Model Interaction Interface (easy integration with Front-end)
+
 
 My big goal is to write an AI
 once I write a good graphical interface for the ease of debugging.
