@@ -76,8 +76,8 @@ impl MoveAPI {
     }
 
     pub fn perft(&mut self, depth: u64) -> (u64, Duration) {
-        if depth == 0 {
-            return (1, Duration::new(0, 0));
+        if depth == 1 {
+            return (self.get_legal_moves().len() as u64, Duration::new(0, 0));
         }
 
         let pseudolegal: Vec<Move> = self

@@ -5,9 +5,6 @@ use crate::chess::{direction::shift, };
 
 use super::{board::{Board, Square, Castle}, cmove::Move, piece::Piece, color::Color, bitboard_util::{mask, clear_bit}, direction::Direction};
 
-
-
-
 const KING_ORIGIN : usize = Square::E8 as usize;
 const SHORT_KING_LANDING : usize = Square::G8 as usize;
 const LONG_KING_LANDING : usize = Square::C8 as usize;
