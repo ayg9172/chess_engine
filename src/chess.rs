@@ -28,8 +28,8 @@ pub const DRAW: &str = "Stalemate";
 pub const NOT_OVER: &str = "IsOngoing";
 
 ///
-/// 
-/// 
+///
+///
 pub enum Message {
     Info(String),
     Error(String),
@@ -37,34 +37,34 @@ pub enum Message {
 
 pub trait GameAPI {
     ///
-    /// 
-    /// 
+    ///
+    ///
     fn try_move(&mut self, m: Move) -> Message;
 
     ///
-    /// 
-    /// 
+    ///
+    ///
     fn try_undo(&mut self) -> Message;
 
     ///
-    /// 
-    /// 
+    ///
+    ///
     fn get_state(&self) -> [[(Option<Piece>, Option<Color>); 8]; 8];
 
     ///
-    /// 
-    /// 
+    ///
+    ///
     fn get_outcome(&mut self) -> Message;
 
     ///
-    /// 
-    /// 
+    ///
+    ///
     fn get_legal_moves(&mut self) -> Vec<Move>;
 }
 
 ///
-/// 
-/// 
+///
+///
 pub struct ChessGame {
     move_api: MoveAPI,
 }
@@ -77,7 +77,6 @@ impl ChessGame {
         }
     }
 }
-
 
 impl GameAPI for ChessGame {
     fn try_move(&mut self, m: Move) -> Message {

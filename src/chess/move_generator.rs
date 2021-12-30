@@ -5,7 +5,7 @@ use super::board::{Board, Castle, Square};
 use super::cmove::Move;
 use super::color::Color;
 use super::piece::Piece;
-use super::position::{Position};
+use super::position::Position;
 use std::num::Wrapping;
 
 /// Legal Move Gen Idea
@@ -105,7 +105,8 @@ impl MoveGenerator {
         let enemy_pieces = board.get_pieces(color.get_opposite());
 
         // all pieces but the king TODO: better name
-        let all_pieces = (friendly_pieces | enemy_pieces) & !board.get_color_piece_board(Piece::King, color);
+        let all_pieces =
+            (friendly_pieces | enemy_pieces) & !board.get_color_piece_board(Piece::King, color);
         let mut attack_board = self.move_table[Piece::King][index];
 
         let mut castle_short = self.move_table.get_castle(Castle::Short, color);
@@ -265,7 +266,12 @@ impl MoveGenerator {
                         ));
                     }
                 } else {
-                    out.push(Move::new(Position::index(i as usize), d, piece, Option::None));
+                    out.push(Move::new(
+                        Position::index(i as usize),
+                        d,
+                        piece,
+                        Option::None,
+                    ));
                 }
             }
             // Remove pawn, so we can get the next one

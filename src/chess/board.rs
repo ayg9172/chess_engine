@@ -9,8 +9,8 @@ use super::fen;
 use super::piece::fen_to_piece;
 use super::piece::piece_to_fen;
 use super::piece::Piece;
+use super::position::position_to_algebraic;
 use super::position::{self, Position};
-use super::position::{position_to_algebraic};
 
 /// Constants for printing the board
 const H_BOUNDARY: &str = "---------------------------------";
@@ -74,10 +74,9 @@ pub struct Board {
 }
 
 impl Board {
-
     ///
-    /// 
-    /// 
+    ///
+    ///
     pub fn new(fen_string: &str) -> Board {
         // todo: add error checks!
         let split: Vec<&str> = fen_string.split_whitespace().collect();
@@ -115,8 +114,12 @@ impl Board {
                 };
 
                 match color {
-                    Color::White => white_pieces = put_bit(white_pieces, Position::new(row, col).to_index()),
-                    Color::Black => black_pieces = put_bit(black_pieces, Position::new(row, col).to_index()),
+                    Color::White => {
+                        white_pieces = put_bit(white_pieces, Position::new(row, col).to_index())
+                    }
+                    Color::Black => {
+                        black_pieces = put_bit(black_pieces, Position::new(row, col).to_index())
+                    }
                 };
                 col += 1;
             }
@@ -174,10 +177,9 @@ impl Board {
         }
     }
 
-
     ///
-    /// 
-    /// 
+    ///
+    ///
     pub fn get_color_piece_board(&self, piece: Piece, color: Color) -> u64 {
         match (piece, color) {
             (Piece::Pawn, Color::White) => (self.pawns & self.white_pieces),
@@ -195,10 +197,9 @@ impl Board {
         }
     }
 
-
     ///
-    /// 
-    /// 
+    ///
+    ///
     pub fn get_piece_board(&self, piece: Piece) -> u64 {
         match piece {
             Piece::Pawn => self.pawns,
@@ -211,8 +212,8 @@ impl Board {
     }
 
     ///
-    /// 
-    /// 
+    ///
+    ///
     pub fn set_color_board(&mut self, color: Color, bitboard: u64) {
         match color {
             Color::White => self.white_pieces = bitboard,
@@ -221,8 +222,8 @@ impl Board {
     }
 
     ///
-    /// 
-    /// 
+    ///
+    ///
     pub fn set_piece_board(&mut self, piece: Piece, bitboard: u64) {
         match piece {
             Piece::Pawn => self.pawns = bitboard,
@@ -235,15 +236,14 @@ impl Board {
     }
 
     ///
-    /// 
-    /// 
+    ///
+    ///
     pub fn get_pieces(&self, color: Color) -> u64 {
         match color {
             Color::White => self.white_pieces,
             Color::Black => self.black_pieces,
         }
     }
-
 
     ///
     ///
@@ -398,7 +398,6 @@ impl Board {
         }
         out
     }
-
 
     ///
     ///

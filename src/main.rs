@@ -3,14 +3,12 @@ use chess::fen;
 use chess::move_api::MoveAPI;
 use std::time::Instant;
 
-
 fn _perft_up_to(fen: &str, depth: u64) {
     println!("=================");
     for d in 1..depth + 1 {
         println!("{}", perft(fen, d));
     }
 }
-
 
 fn perft(fen: &str, depth: u64) -> u64 {
     let mut move_api = MoveAPI::new(fen);

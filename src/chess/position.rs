@@ -14,9 +14,7 @@ pub struct Position {
 
 const BOARD_SIZE: i8 = 8;
 
-
 impl Position {
-
     pub fn new(row: i8, col: i8) -> Position {
         Position { row, col }
     }
@@ -29,8 +27,8 @@ impl Position {
     }
 
     ///
-    /// 
-    /// 
+    ///
+    ///
     pub fn is_in_range(&self) -> bool {
         let not_negative: bool = self.row >= 0 && self.col >= 0;
         let not_exceeds: bool = self.row < BOARD_SIZE && self.col < BOARD_SIZE;
@@ -38,34 +36,33 @@ impl Position {
     }
 
     ///
-    /// 
-    /// 
+    ///
+    ///
     pub fn get_row(&self) -> i8 {
         self.row
     }
 
     ///
-    /// 
-    /// 
+    ///
+    ///
     pub fn get_col(&self) -> i8 {
         self.col
     }
 
     ///
-    /// 
-    /// 
+    ///
+    ///
     pub fn to_index(&self) -> usize {
         (BOARD_SIZE * self.row + self.col) as usize
     }
 
     ///
-    /// 
-    /// 
+    ///
+    ///
     pub fn to_string(&self) -> String {
         position_to_algebraic(self)
     }
 }
-
 
 fn get_notation_map() -> HashMap<char, char> {
     // todo memoize this
@@ -107,7 +104,6 @@ pub fn algebraic_to_position(algebraic: &String) -> Position {
 
     Position::new(row_for_pos as i8, col_for_pos as i8)
 }
-
 
 impl Add for Position {
     type Output = Self;

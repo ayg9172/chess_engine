@@ -32,7 +32,7 @@ impl MoveAPI {
         let mut out = Vec::new();
         let pseudolegal: Vec<Move> = self
             .move_generator
-            .get_moves(self.move_executor.get_board_as_mut());
+            .get_moves(self.get_board_ref());
         let attack_color = self.get_board_ref().turn.get_opposite();
 
         for m in pseudolegal {
@@ -82,7 +82,7 @@ impl MoveAPI {
 
         let pseudolegal: Vec<Move> = self
             .move_generator
-            .get_moves(self.move_executor.get_board_as_mut());
+            .get_moves(self.get_board_ref());
 
         let attack_color = self.get_board_ref().turn.get_opposite();
 
