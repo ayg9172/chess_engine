@@ -43,18 +43,10 @@ fn _all_perft() {
         "r4rk1/1pp1qppp/p1np1n2/2b1p1B1/2B1P1b1/P1NP1N2/1PP1QPPP/R4RK1 w - - 0 10  ",
         4,
     );
-    _perft_up_to("n1n5/PPPk4/8/8/8/8/4Kppp/5N1N b - - 0 6", 6);
+    _perft_up_to("n1n5/PPPk4/8/8/8/8/4Kppp/5N1N b - - 0 6", 5);
 }
 
 #[rustfmt::skip]
 fn main() {
-    let mut _mapi = MoveAPI::new("r3k2r/p1ppqpb1/1n2pnp1/3PN3/1p2P3/2N2Q1p/PPPBbPPP/R2K3R w kq - 0 0
-
-
-    ");
-    //mapi.get_board_ref().dbg();
-    //mapi.perft_divide(1);
     _all_perft();
-    //_perft_up_to(fen::STARTING_BOARD, 5);
-    //divide(fen::STARTING_BOARD, 4);
 }

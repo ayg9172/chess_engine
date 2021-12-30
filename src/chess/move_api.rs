@@ -77,24 +77,55 @@ impl MoveAPI {
 
     pub fn perft(&mut self, depth: u64) -> (u64, Duration) {
         if depth == 1 {
-            return (self.get_legal_moves().len() as u64, Duration::new(0, 0));
+
+            let now = Instant::now();
+            let mut dur = Duration::new(0, 0);
+
+            let now = Instant::now();
+
+            // Yes this is not pretty, the function is in-lined
+            // so we can accurately time pseudolegal moves
+            // with less effort
+            let count = {
+                let mut out = Vec::new();
+                let pseudolegal: Vec<Move> = self
+                    .move_generator
+                    .get_moves(self.get_board_ref());
+                dur += now.elapsed();
+                let attack_color = self.get_board_ref().turn.get_opposite();
+
+                for m in pseudolegal {
+                    self.move_executor.exec_move(m);
+                    let is_check = self.is_check(attack_color);
+                    self.move_executor.undo_move();
+
+                    if !is_check {
+                        out.push(m);
+                    }
+                }
+                out
+            }.len() as u64;
+
+
+            return (count, dur);
         }
+
+        let now = Instant::now();
+        let mut dur = Duration::new(0, 0);
 
         let pseudolegal: Vec<Move> = self
             .move_generator
             .get_moves(self.get_board_ref());
+        dur += now.elapsed();
 
         let attack_color = self.get_board_ref().turn.get_opposite();
 
         let mut out = 0;
 
-        let mut dur = Duration::new(0, 0);
         for m in pseudolegal {
             self.move_executor.exec_move(m);
 
-            let now = Instant::now();
             let is_check = self.is_check(attack_color);
-            dur += now.elapsed();
 
             if !is_check {
                 let rval = self.perft(depth - 1);
