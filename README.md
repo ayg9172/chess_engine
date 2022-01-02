@@ -1,4 +1,4 @@
-# ChessEngine
+# Chess Engine
 Chess Engine (Heavily Work in Progress)
 A Rust-based engine that can generate legal and pseudo-legal chess moves. 
 I began this project with goal of learning Rust, but now I find this really fun to work on :D
