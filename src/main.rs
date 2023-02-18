@@ -1,8 +1,13 @@
 mod chess;
+mod api;
+mod game;
+
 use chess::fen;
 use chess::move_api::MoveAPI;
 use std::time::Instant;
+use api::chess_api::GameAPI;
 
+#[allow(dead_code)]
 fn _perft_up_to(fen: &str, depth: u64) {
     println!("=================");
     for d in 1..depth + 1 {
@@ -10,6 +15,7 @@ fn _perft_up_to(fen: &str, depth: u64) {
     }
 }
 
+#[allow(dead_code)]
 fn perft(fen: &str, depth: u64) -> u64 {
     let mut move_api = MoveAPI::new(fen);
 
@@ -24,6 +30,7 @@ fn perft(fen: &str, depth: u64) -> u64 {
     out
 }
 
+#[allow(dead_code)]
 fn _all_perft() {
     _perft_up_to(fen::STARTING_BOARD, 6);
     _perft_up_to(
@@ -48,5 +55,7 @@ fn _all_perft() {
 
 #[rustfmt::skip]
 fn main() {
-    _all_perft();
+
+
+
 }

@@ -306,6 +306,7 @@ impl MoveGenerator {
         self.is_attacked(board, attacking_color, king_position.to_index())
     }
 
+    #[allow(dead_code, unused_variables)]
     pub fn is_pinned_piece(&self, board: &Board, piece: Piece) -> Option<Direction> {
         todo!();
     }

@@ -75,7 +75,7 @@ impl MoveAPI {
 
     pub fn perft(&mut self, depth: u64) -> (u64, Duration) {
         if depth == 1 {
-            let now = Instant::now();
+
             let mut dur = Duration::new(0, 0);
 
             let now = Instant::now();

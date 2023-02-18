@@ -184,18 +184,18 @@ impl Board {
     ///
     pub fn get_color_piece_board(&self, piece: Piece, color: Color) -> u64 {
         match (piece, color) {
-            (Piece::Pawn, Color::White) => (self.pawns & self.white_pieces),
-            (Piece::Knight, Color::White) => (self.knights & self.white_pieces),
-            (Piece::Bishop, Color::White) => (self.bishops & self.white_pieces),
-            (Piece::Rook, Color::White) => (self.rooks & self.white_pieces),
-            (Piece::Queen, Color::White) => (self.queens & self.white_pieces),
-            (Piece::King, Color::White) => (self.kings & self.white_pieces),
-            (Piece::Pawn, Color::Black) => (self.pawns & self.black_pieces),
-            (Piece::Knight, Color::Black) => (self.knights & self.black_pieces),
-            (Piece::Bishop, Color::Black) => (self.bishops & self.black_pieces),
-            (Piece::Rook, Color::Black) => (self.rooks & self.black_pieces),
-            (Piece::Queen, Color::Black) => (self.queens & self.black_pieces),
-            (Piece::King, Color::Black) => (self.kings & self.black_pieces),
+            (Piece::Pawn, Color::White) => self.pawns & self.white_pieces,
+            (Piece::Knight, Color::White) => self.knights & self.white_pieces,
+            (Piece::Bishop, Color::White) => self.bishops & self.white_pieces,
+            (Piece::Rook, Color::White) => self.rooks & self.white_pieces,
+            (Piece::Queen, Color::White) => self.queens & self.white_pieces,
+            (Piece::King, Color::White) => self.kings & self.white_pieces,
+            (Piece::Pawn, Color::Black) => self.pawns & self.black_pieces,
+            (Piece::Knight, Color::Black) => self.knights & self.black_pieces,
+            (Piece::Bishop, Color::Black) => self.bishops & self.black_pieces,
+            (Piece::Rook, Color::Black) => self.rooks & self.black_pieces,
+            (Piece::Queen, Color::Black) => self.queens & self.black_pieces,
+            (Piece::King, Color::Black) => self.kings & self.black_pieces,
         }
     }
 
