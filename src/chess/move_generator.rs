@@ -7,7 +7,9 @@ use super::cmove::Move;
 use super::color::Color;
 use super::piece::Piece;
 use super::position::Position;
+use core::time;
 use std::num::Wrapping;
+use std::thread;
 
 pub struct MoveGenerator {
     move_table: MoveTable,
@@ -226,7 +228,12 @@ impl MoveGenerator {
         } //// TODO:;
     }
 
-    fn get_piece_moves(&self, board: &Board, piece: Piece, color: Color) -> Vec<Move> {
+    fn get_piece_move_count(&self, board: &Board, piece: Piece, color: Color) -> u32 {
+        let mut pieces = board.get_color_piece_board(piece, color);
+        pieces.count_ones()
+    }
+
+    pub fn get_piece_moves(&self, board: &Board, piece: Piece, color: Color) -> Vec<Move> {
         let mut out = Vec::new();
 
         // todo: remove redundancy
@@ -300,9 +307,22 @@ impl MoveGenerator {
     pub fn is_attacked_king(&self, board: &Board, attacking_color: Color) -> bool {
         let king_color = attacking_color.get_opposite();
         let king_board = board.get_color_piece_board(Piece::King, king_color);
-
+        
         // todo add error check
-        let king_position = MoveGenerator::bitboard_to_positions(king_board)[0];
+        
+
+        let king_positions = MoveGenerator::bitboard_to_positions(king_board);
+        if king_positions.len() == 0 {
+            // todo
+            board.dbg();
+            println!("King not found, Error 404");
+
+            let second = time::Duration::from_millis(1000);
+            
+            thread::sleep(second);
+        } 
+        let king_position = king_positions[0];
+
         self.is_attacked(board, attacking_color, king_position.to_index())
     }
 
@@ -318,6 +338,29 @@ impl MoveGenerator {
         for piece in pieces {
             // TODO: add Color to get_moves()
             out.extend(self.get_piece_moves(board, piece, board.turn));
+        }
+
+        out
+    }
+
+    // TODO fix board borrow
+    pub fn get_moves_color(&self, board: &Board, color: Color) -> Vec<Move> {
+        let mut out = Vec::new();
+        let pieces = PIECE_TYPES;
+        for piece in pieces {
+            // TODO: add Color to get_moves()
+            out.extend(self.get_piece_moves(board, piece, color));
+        }
+
+        out
+    }
+
+    pub fn get_move_count_color(&self, board: &Board, color: Color) -> u32 {
+        let mut out = 0;
+        let pieces = PIECE_TYPES;
+        for piece in pieces {
+            // TODO: add Color to get_moves()
+            out += self.get_piece_move_count(board, piece, color);
         }
 
         out

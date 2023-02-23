@@ -7,6 +7,8 @@ use chess::move_api::MoveAPI;
 use std::time::Instant;
 use api::chess_api::GameAPI;
 
+
+
 #[allow(dead_code)]
 fn _perft_up_to(fen: &str, depth: u64) {
     println!("=================");
@@ -52,10 +54,11 @@ fn _all_perft() {
     );
     _perft_up_to("n1n5/PPPk4/8/8/8/8/4Kppp/5N1N b - - 0 6", 5);
 }
+mod server;
 
 #[rustfmt::skip]
 fn main() {
 
-
+    server::server();
 
 }

@@ -1,4 +1,4 @@
-use super::piece::Piece;
+use super::piece::{Piece, self};
 use super::position::Position;
 
 #[derive(Copy, Clone, PartialEq)]
@@ -15,6 +15,7 @@ pub struct Move {
 
 /// Possible promotion types
 const PROMOTION_PIECES: [Piece; 4] = [Piece::Queen, Piece::Knight, Piece::Rook, Piece::Bishop];
+
 
 impl Move {
     /// Constructor
@@ -40,7 +41,7 @@ impl Move {
 
     #[allow(dead_code)]
     pub fn to_string(&self) -> String {
-        return format!("{:?}", self.promotion)
+        return format!("{:?}", self.piece)
             + ":"
             + &self.start.to_string()
             + "->"

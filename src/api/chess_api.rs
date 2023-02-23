@@ -2,6 +2,8 @@
 
 use crate::chess::cmove::Move;
 
+use crate::chess::{piece, board};
+use crate::chess::position::Position;
 use crate::chess::{color::Color, move_api::MoveAPI, piece::Piece, fen};
 
 #[allow(dead_code)]
@@ -60,14 +62,48 @@ pub struct ChessGame {
 
 impl ChessGame {
     #[allow(dead_code)]
-    pub fn new() -> Self {
+    pub fn new(move_api: MoveAPI) -> Self {
         ChessGame {
-            move_api: MoveAPI::new(fen::STARTING_BOARD),
+            move_api,
         }
+    }
+
+    pub fn dbg(&self) {
+        println!("{}", self.move_api.get_board_ref().to_string())
+    }
+
+    pub fn get_fen(&self) -> String {
+        // todo put functionality in move_api
+        return self.move_api.get_board_ref().get_fen();
+    }
+
+    pub fn get_turn_color(&self) -> Color {
+        self.move_api.get_turn_color()
+    }
+
+    pub fn get_piece(&self, position: Position) -> Option<Piece> {
+        // todo move this logic to board
+        let board = self.move_api
+            .get_board_ref()
+            .get_char_representation();
+
+
+        
+
+        let piece_fen = board[position.get_row() as usize][position.get_col() as usize];
+
+        if piece_fen == board::EMPTY {
+            return None;
+        }
+
+        return Some(piece::fen_to_piece(piece_fen).0);
     }
 }
 
 impl GameAPI for ChessGame {
+
+
+
     fn try_move(&mut self, m: Move) -> Message {
         let legal_moves = self.move_api.get_legal_moves();
         if legal_moves.contains(&m) {

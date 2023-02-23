@@ -19,12 +19,20 @@ impl MoveAPI {
         }
     }
 
+    pub fn get_pseudo_moves_color(&self, color: Color) -> Vec<Move> {
+        self.move_generator.get_moves_color(self.get_board_ref(), color)
+    }
+
     pub fn get_board_ref(&self) -> &Board {
         self.move_executor.get_board_ref()
     }
 
     pub fn get_state(&self) -> [[(Option<Piece>, Option<Color>); 8]; 8] {
         return self.get_board_ref().get_state();
+    }
+
+    pub fn get_piece_move_count(&self, color: Color) -> u32 {
+        self.move_generator.get_move_count_color(self.get_board_ref(), color)
     }
 
     pub fn get_legal_moves(&mut self) -> Vec<Move> {
@@ -71,6 +79,22 @@ impl MoveAPI {
 
     pub fn get_turn_color(&self) -> Color {
         return self.get_board_ref().turn;
+    }
+
+    pub fn get_evaluation(&self) -> f64 {
+
+        let w_score = self.get_board_ref().get_material_score(Color::White);
+        let b_score = self.get_board_ref().get_material_score(Color::Black);
+        let w_dev = self.get_pseudo_moves_color(Color::White).len() as f64;
+        let b_dev = self.get_pseudo_moves_color(Color::Black).len() as f64;
+
+        let w_queen = self.move_generator.get_piece_moves(self.get_board_ref(), Piece::Queen, Color::White).len() as f64;
+        let b_queen = self.move_generator.get_piece_moves(self.get_board_ref(), Piece::Queen, Color::Black).len() as f64;
+
+        let overextend_w = w_queen;
+        let overextend_b = b_queen;
+
+        w_score - b_score + (w_dev - b_dev) * 0.001 + 0.001 * b_queen / w_queen
     }
 
     pub fn perft(&mut self, depth: u64) -> (u64, Duration) {
