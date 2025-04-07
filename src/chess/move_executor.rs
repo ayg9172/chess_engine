@@ -14,9 +14,9 @@ pub struct MoveExecutor {
     /// reference to the board
     board: Box<Board>,
     previous_boards: Vec<Board>,
-
     castle_utility: CastleUtility,
 }
+
 const CAPTURE_TYPES: [Piece; 5] = [
     Piece::Pawn,
     Piece::Knight,

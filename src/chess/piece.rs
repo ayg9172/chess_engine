@@ -11,6 +11,28 @@ pub enum Piece {
     King,
 }
 
+pub fn get_piece_value(piece: Piece) -> f64 {
+    match piece {
+        Piece::Pawn => 1f64,
+        Piece::Knight => 3f64,
+        Piece::Bishop => 3.1f64, 
+        Piece::Rook => 5f64,
+        Piece::Queen => 9f64,
+        Piece::King => 0f64
+    }
+} 
+
+pub fn get_piece_dev_value(piece: Piece) -> f64 {
+    match piece {
+        Piece::Pawn => 3f64,
+        Piece::Knight => 4f64,
+        Piece::Bishop => 5f64, 
+        Piece::Rook => 2f64,
+        Piece::Queen => 1f64,
+        Piece::King => 0f64
+    }
+} 
+
 pub fn fen_to_piece(fen: char) -> (Piece, Color) {
     let color = if fen.is_uppercase() {
         Color::White
