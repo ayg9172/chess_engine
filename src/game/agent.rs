@@ -33,31 +33,14 @@ struct ScoredMove {
 
 impl ScoredMove {
     // todo make this function easy to change by creating subroutines
-    pub fn compareTo(&self, other: &ScoredMove) -> Ordering {
-        match self.is_good_idea.partial_cmp(&other.is_good_idea) {
-            Some(Ordering::Equal) => {},
-            None => {},
-            Some(ord) => return ord,
-        }
-        match self.board_value.partial_cmp(&other.board_value) {
-            Some(Ordering::Equal) => {},
-            None => {},
-            Some(ord) => return ord,
-        }
-        match self.aggression_value.partial_cmp(&other.aggression_value) {
-            Some(Ordering::Equal) => {},
-            None => {},
-            Some(ord) => return ord,
-        }
-        match self.freedom_value.partial_cmp(&other.freedom_value) {
-            Some(Ordering::Equal) => {},
-            None => {},
-            Some(ord) => return ord,
-        }
-
-        return Ordering::Equal;
-        // todo dont calculate freedom value unless necessary?
-        //self.piece_value.partial_cmp(&other.piece_value).unwrap()
+    pub fn compare_to(&self, other: &ScoredMove) -> Ordering {
+        self.is_good_idea
+            .partial_cmp(&other.is_good_idea)
+            .unwrap_or(Ordering::Equal)
+            .then_with(|| self.board_value.partial_cmp(&other.board_value).unwrap_or(Ordering::Equal))
+            .then_with(|| self.aggression_value.partial_cmp(&other.aggression_value).unwrap_or(Ordering::Equal))
+            .then_with(|| self.freedom_value.partial_cmp(&other.freedom_value).unwrap_or(Ordering::Equal))
+            .then_with(|| self.piece_value.partial_cmp(&other.piece_value).unwrap_or(Ordering::Equal))
     }
 }
 
@@ -78,7 +61,10 @@ impl TomatoAgent {
         if moves.len() == 0 {
             return (MIN, None); // todo
         }
-        moves = self.order_moves(move_api, moves, color, depth);
+        
+        // TODO: Ordering moves has a bug found in 2025/04/06 that breaks the engine
+        // TODO: Fix it
+        // moves = self.order_moves(move_api, moves, color, depth);
 
         let mut best_value = MIN;
         let mut best_move = moves[0];
@@ -158,7 +144,7 @@ impl TomatoAgent {
             move_api.undo_move();
         }
 
-        ordered_moves.sort_by(|a, b| b.compareTo(a));
+        ordered_moves.sort_by(|a, b| b.compare_to(a));
 
         let mut out = Vec::new();
         for scored_move in &ordered_moves {

@@ -163,8 +163,11 @@ pub async fn server() -> std::io::Result<()> {
     HttpServer::new(|| {
 
         let cors = Cors::permissive()
-        .allowed_origin("http://localhost:5173").send_wildcard(); // bug in actix requires http protocol specification?
+        .allowed_origin("http://localhost:5173")
+        .allowed_methods(vec!["POST"])
+        .allow_any_header();
 
+    
         App::new()
         .wrap(cors)
         .service(web::resource("/requestMove").route(web::post().to(try_move)))
